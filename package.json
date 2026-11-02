@@ -1,0 +1,15 @@
+{
+  "name": "homebridge-ir-patio-heater",
+  "displayName": "IR Patio Heater (Tuya)",
+  "version": "1.0.4",
+  "description": "Shows remote-only patio heaters controlled by a Tuya IR blaster in HomeKit, with Heater (on/off), Level and Out of Sync tiles.",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "keywords": ["homebridge-plugin", "tuya", "infrared", "heater"],
+  "engines": {
+    "node": ">=18.0.0",
+    "homebridge": "^1.6.0 || ^2.0.0-beta.0"
+  },
+  "files": ["index.js", "lib/", "config.schema.json", "README.md"]
+}

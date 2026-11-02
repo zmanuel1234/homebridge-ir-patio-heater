@@ -1,0 +1,174 @@
+{
+  "pluginAlias": "PatioHeater",
+  "pluginType": "platform",
+  "singular": true,
+  "headerDisplay": "Remote-only patio heaters controlled through a Tuya IR blaster. Use the same Access ID / Access Secret as the Tuya plugin.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Name",
+        "type": "string",
+        "default": "Patio Heaters",
+        "required": true
+      },
+      "endpoint": {
+        "title": "Tuya data center",
+        "type": "string",
+        "default": "https://openapi.tuyaus.com",
+        "oneOf": [
+          {
+            "title": "Americas (West)",
+            "enum": [
+              "https://openapi.tuyaus.com"
+            ]
+          },
+          {
+            "title": "Americas (East)",
+            "enum": [
+              "https://openapi-ueaz.tuyaus.com"
+            ]
+          },
+          {
+            "title": "Europe (Central)",
+            "enum": [
+              "https://openapi.tuyaeu.com"
+            ]
+          },
+          {
+            "title": "Europe (West)",
+            "enum": [
+              "https://openapi-weaz.tuyaeu.com"
+            ]
+          },
+          {
+            "title": "India",
+            "enum": [
+              "https://openapi.tuyain.com"
+            ]
+          },
+          {
+            "title": "China",
+            "enum": [
+              "https://openapi.tuyacn.com"
+            ]
+          }
+        ]
+      },
+      "accessId": {
+        "title": "Access ID",
+        "type": "string",
+        "required": true
+      },
+      "accessKey": {
+        "title": "Access Secret",
+        "type": "string",
+        "required": true
+      },
+      "heaters": {
+        "title": "Heaters",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "title": "Name of the Heater (on/off) tile",
+              "type": "string",
+              "required": true
+            },
+            "levelName": {
+              "title": "Level tile name (default: '<name> Level')",
+              "type": "string"
+            },
+            "syncName": {
+              "title": "Out of Sync tile name (default: '<name> Out of Sync')",
+              "type": "string"
+            },
+            "showSyncButton": {
+              "title": "Add the Out of Sync tile (flips HomeKit's on/off, sends nothing)",
+              "type": "boolean",
+              "default": true
+            },
+            "blasterId": {
+              "title": "IR blaster device ID",
+              "type": "string",
+              "required": true
+            },
+            "remoteId": {
+              "title": "IR remote device ID",
+              "type": "string",
+              "required": true
+            },
+            "powerKey": {
+              "title": "Power key name",
+              "type": "string",
+              "default": "power"
+            },
+            "levelKeys": {
+              "title": "Level key names (lowest to highest)",
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "500W",
+                "1000W",
+                "1500W"
+              ]
+            },
+            "defaultLevel": {
+              "title": "Level used the very first time (1 = lowest); after that the last level is used",
+              "type": "integer",
+              "minimum": 1
+            },
+            "keyDelayMs": {
+              "title": "Wait after Power before the level press (ms)",
+              "type": "integer",
+              "default": 1000,
+              "minimum": 200
+            },
+            "levelRepeat": {
+              "title": "Send each level press this many times (Power is never repeated)",
+              "type": "integer",
+              "default": 2,
+              "minimum": 1,
+              "maximum": 4
+            },
+            "levelRepeatDelayMs": {
+              "title": "Gap between repeated level presses (ms)",
+              "type": "integer",
+              "default": 700,
+              "minimum": 200
+            },
+            "debounceMs": {
+              "title": "Wait to combine HomeKit requests (ms)",
+              "type": "integer",
+              "default": 150,
+              "minimum": 50
+            },
+            "plugId": {
+              "title": "Tuya smart plug ID (optional, makes Off always correct)",
+              "type": "string"
+            },
+            "plugCode": {
+              "title": "Plug switch code",
+              "type": "string",
+              "default": "switch_1"
+            },
+            "plugPowerUpDelayMs": {
+              "title": "Wait after plug on before Power (ms)",
+              "type": "integer",
+              "default": 4000
+            },
+            "autoOffMinutes": {
+              "title": "Auto-off after minutes (plug only, 0 = never)",
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          }
+        }
+      }
+    }
+  }
+}
