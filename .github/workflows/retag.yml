@@ -1,0 +1,17 @@
+# One-off: point v1.1.0 at the same commit rewritten with the GitHub noreply email. Removed after it has run.
+name: Retag
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  retag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: |
+          set -e
+          git cat-file -e "0423e77a48e7467725961309837a3bf23e41ac9c^{commit}"
+          git push --force origin "0423e77a48e7467725961309837a3bf23e41ac9c:refs/tags/v1.1.0"
+          git ls-remote --tags origin
