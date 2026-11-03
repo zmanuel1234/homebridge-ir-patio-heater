@@ -9,8 +9,7 @@
       "name": {
         "title": "Name",
         "type": "string",
-        "default": "Patio Heaters",
-        "required": true
+        "default": "Patio Heaters"
       },
       "endpoint": {
         "title": "Tuya data center",
@@ -57,13 +56,11 @@
       },
       "accessId": {
         "title": "Access ID",
-        "type": "string",
-        "required": true
+        "type": "string"
       },
       "accessKey": {
         "title": "Access Secret",
-        "type": "string",
-        "required": true
+        "type": "string"
       },
       "heaters": {
         "title": "Heaters",
@@ -73,8 +70,7 @@
           "properties": {
             "name": {
               "title": "Name of the Heater (on/off) tile",
-              "type": "string",
-              "required": true
+              "type": "string"
             },
             "levelName": {
               "title": "Level tile name (default: '<name> Level')",
@@ -91,13 +87,11 @@
             },
             "blasterId": {
               "title": "IR blaster device ID",
-              "type": "string",
-              "required": true
+              "type": "string"
             },
             "remoteId": {
               "title": "IR remote device ID",
-              "type": "string",
-              "required": true
+              "type": "string"
             },
             "powerKey": {
               "title": "Power key name",
@@ -158,17 +152,34 @@
             "plugPowerUpDelayMs": {
               "title": "Wait after plug on before Power (ms)",
               "type": "integer",
-              "default": 4000
+              "default": 4000,
+              "minimum": 0
+            },
+            "plugPollSeconds": {
+              "title": "Check the plug's state every (s)",
+              "type": "integer",
+              "default": 60,
+              "minimum": 10
             },
             "autoOffMinutes": {
-              "title": "Auto-off after minutes (plug only, 0 = never)",
+              "title": "Auto-off after minutes (needs a plug; 0 = never)",
               "type": "integer",
               "default": 0,
               "minimum": 0
             }
-          }
+          },
+          "required": [
+            "name",
+            "blasterId",
+            "remoteId"
+          ]
         }
       }
-    }
+    },
+    "required": [
+      "name",
+      "accessId",
+      "accessKey"
+    ]
   }
 }

@@ -24,7 +24,8 @@ class PatioHeaterPlatform {
 
   /** Returns the cached accessory for this id, or creates and registers a new one. */
   accessoryFor(id, name, category) {
-    // Seeded differently from homebridge-tuya-platform so the UUIDs never collide.
+    // Ids are prefixed with "patio-heater:", so they can't collide with UUIDs another
+    // plugin generates from the same Tuya device id.
     const uuid = this.api.hap.uuid.generate(id);
     this.keep.add(uuid);
     let accessory = this.cached.get(uuid);
@@ -40,7 +41,7 @@ class PatioHeaterPlatform {
     const { accessId, accessKey, endpoint } = this.config;
     const list = Array.isArray(this.config.heaters) ? this.config.heaters : [];
     if (!accessId || !accessKey) {
-      this.log.error('accessId and accessKey are required (same values as in the Tuya plugin).');
+      this.log.error('accessId and accessKey are required (the Access ID / Access Secret of your Tuya cloud project).');
       return;
     }
 
@@ -54,17 +55,6 @@ class PatioHeaterPlatform {
         this.log.error('Each heater needs name, blasterId and remoteId. Skipping: %j', cfg);
         continue;
       }
-      if (cfg.temperatureSensorId || cfg.accessoryType === 'heater') {
-        this.log.info('[%s] temperatureSensorId / accessoryType are no longer used; '
-          + 'the patio sensor already shows in HomeKit through the Tuya plugin.', cfg.name);
-      }
-
-      if (cfg.showPowerButton !== undefined || cfg.showResetButton !== undefined
-        || cfg.powerButtonName || cfg.resetButtonName) {
-        this.log.info('[%s] Power/Reset buttons were replaced by Level and Out of Sync tiles in v1.0.4; '
-          + 'the old settings are ignored.', cfg.name);
-      }
-
       const main = this.accessoryFor(`patio-heater:${cfg.remoteId}`, cfg.name, Categories.SWITCH);
       const extra = {
         level: this.accessoryFor(`patio-heater:${cfg.remoteId}:level`,
