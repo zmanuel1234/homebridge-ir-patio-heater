@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1 - 2026-11-03
+
+### Fixed
+- Settings screen: the Level and Out of Sync tile name hints were missing the heater name,
+  because the screen treated `<name>` as markup. They now say the default in words.
+
 ## 1.1.0 - 2026-11-03
 
 First public release.

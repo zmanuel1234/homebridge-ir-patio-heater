@@ -73,11 +73,13 @@
               "type": "string"
             },
             "levelName": {
-              "title": "Level tile name (default: '<name> Level')",
+              "title": "Level tile name",
+              "description": "Leave empty for the heater name followed by Level.",
               "type": "string"
             },
             "syncName": {
-              "title": "Out of Sync tile name (default: '<name> Out of Sync')",
+              "title": "Out of Sync tile name",
+              "description": "Leave empty for the heater name followed by Out of Sync.",
               "type": "string"
             },
             "showSyncButton": {
