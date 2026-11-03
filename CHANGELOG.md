@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.3 - 2026-11-03
+
+### Fixed
+- A Tuya read retried after a network error now gets a new timestamp, nonce and signature.
+  It reused the first attempt's, which Tuya can reject as a replay, so the retry could fail
+  where a fresh request would have worked.
+
 ## 1.1.2 - 2026-11-03
 
 ### Fixed

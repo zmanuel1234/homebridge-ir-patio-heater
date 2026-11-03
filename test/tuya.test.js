@@ -37,6 +37,21 @@ test('GET requests are retried after a network error', async () => {
   assert.deepEqual(calls, ['GET', 'GET', 'GET']);
 });
 
+test('each retry is signed again with a new nonce', async () => {
+  const seen = [];
+  global.fetch = async (url, opts) => {
+    seen.push({ nonce: opts.headers.nonce, sign: opts.headers.sign });
+    if (seen.length < 3) {
+      throw new Error('socket hang up');
+    }
+    return { ok: true, json: async () => ({ success: true, result: [] }) };
+  };
+  await cloudWithToken().getStatus('dev');
+  assert.equal(seen.length, 3);
+  assert.equal(new Set(seen.map((s) => s.nonce)).size, 3);
+  assert.equal(new Set(seen.map((s) => s.sign)).size, 3);
+});
+
 test('POST requests are never retried, so Power is not pressed twice', async () => {
   global.fetch = async (url, opts) => {
     calls.push(opts.method);
