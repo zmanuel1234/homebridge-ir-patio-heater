@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.2 - 2026-11-03
+
+### Fixed
+- Settings screen: all number fields are number boxes. "Send each level press this many
+  times" was a slider, and some versions of the screen drew the other timing fields as
+  sliders too.
+
 ## 1.1.1 - 2026-11-03
 
 ### Fixed

@@ -23,3 +23,14 @@ test('settings screen: no <...> in labels, which the screen renders as markup', 
     assert.doesNotMatch(t, /<[a-z][^>]*>/i, t);
   }
 });
+
+test('settings screen: number fields are number boxes, not sliders', () => {
+  // The settings screen draws an integer with a minimum (and on some versions
+  // without a maximum too) as a range slider; exact values are hard to set.
+  const fields = Object.entries(schema.schema.properties.heaters.items.properties)
+    .filter(([, v]) => v.type === 'integer' || v.type === 'number');
+  assert.ok(fields.length > 0);
+  for (const [key, v] of fields) {
+    assert.equal(v['x-schema-form'] && v['x-schema-form'].type, 'number', key);
+  }
+});

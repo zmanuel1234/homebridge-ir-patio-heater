@@ -115,17 +115,20 @@
             "defaultLevel": {
               "title": "Level used the very first time (1 = lowest); after that the last level is used",
               "type": "integer",
+              "x-schema-form": { "type": "number" },
               "minimum": 1
             },
             "keyDelayMs": {
               "title": "Wait after Power before the level press (ms)",
               "type": "integer",
+              "x-schema-form": { "type": "number" },
               "default": 1000,
               "minimum": 200
             },
             "levelRepeat": {
               "title": "Send each level press this many times (Power is never repeated)",
               "type": "integer",
+              "x-schema-form": { "type": "number" },
               "default": 2,
               "minimum": 1,
               "maximum": 4
@@ -133,12 +136,14 @@
             "levelRepeatDelayMs": {
               "title": "Gap between repeated level presses (ms)",
               "type": "integer",
+              "x-schema-form": { "type": "number" },
               "default": 700,
               "minimum": 200
             },
             "debounceMs": {
               "title": "Wait to combine HomeKit requests (ms)",
               "type": "integer",
+              "x-schema-form": { "type": "number" },
               "default": 150,
               "minimum": 50
             },
@@ -154,18 +159,21 @@
             "plugPowerUpDelayMs": {
               "title": "Wait after plug on before Power (ms)",
               "type": "integer",
+              "x-schema-form": { "type": "number" },
               "default": 4000,
               "minimum": 0
             },
             "plugPollSeconds": {
               "title": "Check the plug's state every (s)",
               "type": "integer",
+              "x-schema-form": { "type": "number" },
               "default": 60,
               "minimum": 10
             },
             "autoOffMinutes": {
               "title": "Auto-off after minutes (needs a plug; 0 = never)",
               "type": "integer",
+              "x-schema-form": { "type": "number" },
               "default": 0,
               "minimum": 0
             }
