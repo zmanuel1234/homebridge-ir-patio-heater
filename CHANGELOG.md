@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+- Development only, nothing changes for users: the same ESLint and Dependabot setup as the
+  author's other plugins. ESLint now checks for likely bugs (unhandled promises and similar)
+  instead of formatting, reading the JavaScript through a `tsconfig.json` that isn't used for
+  building. It runs once in CI, on Node 24, while the tests still run on every supported Node
+  version.
+
 ## 1.1.4 - 2026-11-03
 
 ### Changed
