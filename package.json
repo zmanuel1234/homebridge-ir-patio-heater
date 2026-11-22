@@ -23,7 +23,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0 && tsc -p .",
     "test": "node --test test/*.test.js"
   },
   "keywords": [
@@ -42,8 +42,11 @@
     "homebridge": "^1.6.0 || ^2.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.17.0",
-    "eslint": "^9.17.0",
-    "globals": "^15.14.0"
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^18.19.130",
+    "eslint": "^10.15.0",
+    "globals": "^17.14.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.73.0"
   }
 }
