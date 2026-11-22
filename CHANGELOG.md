@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Changed
+- **Requires Node.js 22, 24 or 26** (dropped 18 and 20, which no longer get security updates; Homebridge 2.5 itself needs 22.12 or later). Check with `node -v` or on the Homebridge UI's status page before updating.
 - Development only, nothing changes for users: the same ESLint and Dependabot setup as the
   author's other plugins. ESLint now checks for likely bugs (unhandled promises and similar)
   instead of formatting, reading the JavaScript through a `tsconfig.json` that isn't used for
