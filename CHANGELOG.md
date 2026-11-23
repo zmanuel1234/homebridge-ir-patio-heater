@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 1.2.0 - 2026-11-22
+
+No new settings; with your current config, 1.2.0 behaves like 1.1.4. Check your Node.js version
+before updating (below).
 
 ### Changed
 - **Requires Node.js 22.19 or later, 24 or 26** (dropped 18 and 20, which no longer get security updates; on Node 22, 22.19 is the minimum across the author's plugins). Check with `node -v` or on the Homebridge UI's status page before updating.
@@ -9,6 +12,11 @@
   instead of formatting, reading the JavaScript through a `tsconfig.json` that isn't used for
   building. It runs once in CI, on Node 24, while the tests still run on every supported Node
   version.
+- Development only: `npm publish` lints and tests first. New tests cover the plug (a plug
+  reported off shows the heater off; turned back on, it stays off), auto-off, a remote missing the
+  configured keys, keys that fail to load and are retried, a failed repeat of the level press,
+  the Level tile turned off, DIY learned remotes, the plug's Tuya calls, Tuya errors and their
+  hints, and the token renewed in the background.
 
 ## 1.1.4 - 2026-11-03
 
