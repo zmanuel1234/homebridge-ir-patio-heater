@@ -6,6 +6,7 @@
 
 [![npm](https://badgen.net/npm/v/homebridge-ir-patio-heater)](https://www.npmjs.com/package/homebridge-ir-patio-heater)
 [![license](https://badgen.net/github/license/zmanuel1234/homebridge-ir-patio-heater)](LICENSE)
+[![Sponsor](https://img.shields.io/badge/Sponsor-zmanuel1234-EA4AAA?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/zmanuel1234)
 [![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-zmanuel-FFDD00?logo=buymeacoffee&logoColor=black)](https://www.buymeacoffee.com/zmanuel)
 
 Shows remote-only patio heaters, controlled through a Tuya IR blaster, as three HomeKit

@@ -13,7 +13,16 @@
   "bugs": {
     "url": "https://github.com/zmanuel1234/homebridge-ir-patio-heater/issues"
   },
-  "funding": "https://www.buymeacoffee.com/zmanuel",
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/zmanuel1234"
+    },
+    {
+      "type": "buymeacoffee",
+      "url": "https://www.buymeacoffee.com/zmanuel"
+    }
+  ],
   "main": "index.js",
   "files": [
     "index.js",
