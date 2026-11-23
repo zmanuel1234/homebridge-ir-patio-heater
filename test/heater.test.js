@@ -135,3 +135,108 @@ test('autoOffMinutes without a plug is ignored with a warning', async () => {
   assert.equal(heater.autoOffMinutes, 0);
   assert.ok(platform.logs.some((l) => l.level === 'warn' && /autoOffMinutes/.test(l.msg)));
 });
+
+// ─── The plug, auto-off and the remote's keys ─────────────────────────────
+
+const plugCloud = (status) => Object.assign(fakeCloud(), { getStatus: async () => status() });
+
+test('the plug reported off while the heater is on: HomeKit shows it off', async (t) => {
+  let plugOn = true;
+  const { heater, platform, on } = await makeHeater({ cfg: { plugId: 'plug' }, cloud: plugCloud(() => [{ code: 'switch_1', value: plugOn }]), state: { on: true, level: 2 } });
+  t.after(() => heater.stop());
+  plugOn = false;
+  await heater.pollPlug();
+  assert.equal(heater.state.on, false);
+  assert.equal(on.value, false);
+  assert.ok(platform.logs.some((l) => l.level === 'info' && /Plug is off/.test(l.msg)));
+});
+
+test('the plug turned back on does not turn the heater on (it stays off after power returns)', async (t) => {
+  const { heater } = await makeHeater({ cfg: { plugId: 'plug' }, cloud: plugCloud(() => [{ code: 'switch_1', value: true }]) });
+  t.after(() => heater.stop());
+  await heater.pollPlug();
+  assert.equal(heater.state.on, false, 'still off');
+});
+
+test('a plug without the configured status code is reported once per poll', async (t) => {
+  const { heater, platform } = await makeHeater({ cfg: { plugId: 'plug', plugCode: 'switch_2' }, cloud: plugCloud(() => [{ code: 'switch_1', value: true }]) });
+  t.after(() => heater.stop());
+  assert.ok(platform.logs.some((l) => l.level === 'warn' && /no "%s" status code/.test(l.msg) && l.args.includes('switch_2')));
+});
+
+test('a failed plug poll changes nothing (debug log only)', async (t) => {
+  const cloud = Object.assign(fakeCloud(), { getStatus: async () => { throw new Error('offline'); } });
+  const { heater, platform } = await makeHeater({ cfg: { plugId: 'plug' }, cloud, state: { on: true, level: 1 } });
+  t.after(() => heater.stop());
+  assert.equal(heater.state.on, true);
+  assert.ok(platform.logs.some((l) => l.level === 'debug' && /Plug poll failed/.test(l.msg)));
+  assert.ok(!platform.logs.some((l) => l.level === 'error' || l.level === 'warn'));
+});
+
+test('auto-off: with a plug, the heater turns off by itself after autoOffMinutes', async (t) => {
+  const { heater, cloud, on, platform } = await makeHeater({ cfg: { plugId: 'plug', autoOffMinutes: 0.001 } }); // 60 ms
+  t.after(() => heater.stop());
+  on.setHandler(true);
+  await settle(heater);
+  assert.equal(heater.state.on, true);
+  await new Promise((r) => setTimeout(r, 120));
+  await settle(heater);
+  assert.equal(heater.state.on, false);
+  assert.equal(cloud.sent.at(-1), 'plug:off');
+  assert.ok(platform.logs.some((l) => /Auto-off after/.test(l.msg)));
+});
+
+test('a remote without the configured keys: an error naming them, and presses are refused', async (t) => {
+  const cloud = Object.assign(fakeCloud(), {
+    getRemoteKeys: async () => ({ category_id: 5, remote_index: 1, key_list: [{ key: 'power', key_id: 1, key_name: 'power' }] }),
+  });
+  const { heater, platform, on } = await makeHeater({ cloud });
+  t.after(() => heater.stop());
+  const missing = platform.logs.find((l) => l.level === 'error' && /Remote has no key named/.test(l.msg));
+  assert.ok(missing);
+  assert.match(missing.args[0], /500W, 1000W, 1500W/);
+  on.setHandler(true);
+  await settle(heater);
+  assert.deepEqual(cloud.sent, [], 'nothing pressed');
+  assert.equal(heater.state.on, false, 'still shown off');
+  assert.ok(platform.logs.some((l) => l.level === 'error' && /remote keys not loaded yet/.test(String(l.args.join(' ')) + l.msg)));
+});
+
+test('keys that fail to load are retried later', async (t) => {
+  let fail = true;
+  const real = fakeCloud();
+  const cloud = Object.assign(real, { getRemoteKeys: async () => { if (fail) throw new Error('Tuya down'); return fakeCloud().getRemoteKeys(); } });
+  const { heater, platform } = await makeHeater({ cloud });
+  t.after(() => heater.stop());
+  assert.ok(platform.logs.some((l) => l.level === 'error' && /retrying in 60s/.test(l.msg)));
+  assert.ok(heater.retryTimer, 'a retry is scheduled');
+  fail = false;
+  await heater.loadKeys(); // the retry
+  assert.ok(heater.keys, 'loaded on the retry');
+});
+
+test('a failed repeat of the level press is only a warning: the first press went through', async (t) => {
+  const cloud = fakeCloud();
+  const realPress = cloud.pressKey;
+  let presses = 0;
+  cloud.pressKey = async (...args) => {
+    if (args[3].key_name === '1500W' && ++presses === 2) throw new Error('timeout');
+    return realPress(...args);
+  };
+  const { heater, platform, on } = await makeHeater({ cloud });
+  t.after(() => heater.stop());
+  on.setHandler(true);
+  await settle(heater);
+  assert.equal(heater.state.on, true);
+  assert.ok(platform.logs.some((l) => l.level === 'warn' && /Repeat of %s failed/.test(l.msg)));
+});
+
+test('the Level tile turned off (Active 0) turns the heater off', async (t) => {
+  const { heater, cloud, on, active } = await makeHeater({ state: { on: true, level: 2 } });
+  t.after(() => heater.stop());
+  active.setHandler(0);
+  await settle(heater);
+  assert.equal(heater.state.on, false);
+  assert.equal(on.value, false);
+  assert.deepEqual(cloud.sent, ['power']);
+});
