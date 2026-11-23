@@ -1,3 +1,7 @@
+<p align="center">
+  <img alt="IR Patio Heater" src="https://raw.githubusercontent.com/zmanuel1234/homebridge-ir-patio-heater/main/branding/homebridge-ir-patio-heater.svg" width="150">
+</p>
+
 # homebridge-ir-patio-heater
 
 [![npm](https://badgen.net/npm/v/homebridge-ir-patio-heater)](https://www.npmjs.com/package/homebridge-ir-patio-heater)
