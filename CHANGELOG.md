@@ -17,6 +17,7 @@ before updating (below).
   configured keys, keys that fail to load and are retried, a failed repeat of the level press,
   the Level tile turned off, DIY learned remotes, the plug's Tuya calls, Tuya errors and their
   hints, and the token renewed in the background.
+- Development only: the same release and CI workflows as the author's other plugins. Publishing a GitHub release publishes it to npm (with trusted publishing; the package and its checksum are added to the release); each repository's checks are its `verify`, `test:matrix` and `release:check` scripts.
 
 ## 1.1.4 - 2026-11-03
 

@@ -25,7 +25,10 @@
   "scripts": {
     "lint": "eslint . --max-warnings=0 && tsc -p .",
     "test": "node --test test/*.test.js",
-    "prepublishOnly": "npm run lint && npm test"
+    "prepublishOnly": "npm run lint && npm test",
+    "verify": "npm run lint && npm test",
+    "test:matrix": "npm test",
+    "release:check": "npm run verify"
   },
   "keywords": [
     "homebridge-plugin",
