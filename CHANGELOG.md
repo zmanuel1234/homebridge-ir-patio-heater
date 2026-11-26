@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.2 - 2026-11-26
+
+No change to how the plugin works: the plugin's files are identical to 1.2.1's.
+
+### Changed
+- Development only: linted with oxlint (with TypeScript 7 for its type-aware checks) instead of
+  ESLint and TypeScript 6, with the same rules. CI retries npm's package signature check up to 3
+  times, because npm's registry sometimes answers it with an invalid response.
+
 ## 1.2.1 - 2026-11-26
 
 No change to how the plugin works.

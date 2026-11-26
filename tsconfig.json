@@ -1,5 +1,5 @@
 {
-  // Not used for building: the plugin is plain JavaScript. ESLint's type-aware rules (the
+  // Not used for building: the plugin is plain JavaScript. oxlint's type-aware rules (the
   // promise checks) read the code through this file.
   "compilerOptions": {
     "target": "ES2022",
