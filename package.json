@@ -1,7 +1,7 @@
 {
   "name": "homebridge-ir-patio-heater",
   "displayName": "IR Patio Heater (Tuya)",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Remote-only patio heaters, driven through a Tuya IR blaster, in HomeKit: an on/off tile, a power-level slider and an Out of Sync button.",
   "author": "Manuel Zamfir",
   "license": "MIT",
@@ -33,7 +33,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "lint": "eslint . --max-warnings=0 && tsc -p .",
+    "lint": "oxlint && tsc -p .",
     "test": "node --test test/*.test.js",
     "prepublishOnly": "npm run lint && npm test",
     "verify": "npm run lint && npm test",
@@ -56,11 +56,9 @@
     "homebridge": "^1.6.0 || ^2.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
     "@types/node": "^22.20.5",
-    "eslint": "^10.15.0",
-    "globals": "^17.14.0",
-    "typescript": "~6.0.3",
-    "typescript-eslint": "^8.73.0"
+    "oxlint": "1.94.0",
+    "oxlint-tsgolint": "7.0.2007",
+    "typescript": "7.0.2"
   }
 }
