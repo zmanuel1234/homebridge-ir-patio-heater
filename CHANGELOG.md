@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.3 - 2026-11-26
+
+No change to how the plugin works.
+
+### Changed
+- Development only: the linter again runs ESLint's no-dupe-args and no-octal (through a small local oxlint plugin), so it checks everything the old ESLint setup did.
+
 ## 1.2.2 - 2026-11-26
 
 No change to how the plugin works: the plugin's files are identical to 1.2.1's.
