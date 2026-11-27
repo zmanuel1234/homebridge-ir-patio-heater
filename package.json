@@ -2,7 +2,7 @@
   "name": "homebridge-ir-patio-heater",
   "displayName": "IR Patio Heater (Tuya)",
   "version": "1.2.3",
-  "description": "Remote-only patio heaters, driven through a Tuya IR blaster, in HomeKit: an on/off tile, a power-level slider and an Out of Sync button.",
+  "description": "Remote-only patio heaters, driven through a Tuya (Smart Life) IR blaster, in HomeKit: an on/off tile, a power-level slider and an Out of Sync button.",
   "author": "Manuel Zamfir",
   "license": "MIT",
   "homepage": "https://github.com/zmanuel1234/homebridge-ir-patio-heater#readme",
@@ -49,7 +49,11 @@
     "infrared",
     "ir",
     "patio",
-    "heater"
+    "heater",
+    "ir-blaster",
+    "smart-life",
+    "patio-heater",
+    "outdoor-heater"
   ],
   "engines": {
     "node": "^22.19.0 || ^24.0.0 || ^26.0.0",
