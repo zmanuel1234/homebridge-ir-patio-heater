@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.4 - 2026-11-27
+
+No change to how the plugin works.
+
+### Changed
+- npm and Homebridge's plugin search: the description mentions Smart Life, the name many Tuya IR blasters are sold under, with keywords for IR blasters and patio heaters. The README has Verified by Homebridge, CI and downloads badges.
+- Development only: CI and releases use the same shared workflows as the other plugins (cached packages, release notes from this changelog); oxlint-tsgolint updated.
+
 ## 1.2.3 - 2026-11-26
 
 No change to how the plugin works.
