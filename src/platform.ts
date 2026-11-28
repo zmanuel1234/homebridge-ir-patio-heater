@@ -1,29 +1,42 @@
-'use strict';
+import type { API, Categories, DynamicPlatformPlugin, Logging, PlatformAccessory, PlatformConfig } from 'homebridge';
 
-const { TuyaCloud } = require('./lib/tuya');
-const { PatioHeater } = require('./lib/heater');
+import { PatioHeater, type HeaterConfig, type HeaterContext } from './heater.js';
+import { PLATFORM_NAME, PLUGIN_NAME } from './settings.js';
+import { TuyaCloud } from './tuya.js';
 
-const PLUGIN_NAME = 'homebridge-ir-patio-heater';
-const PLATFORM_NAME = 'PatioHeater';
+/** The platform's settings (config.schema.json). They come from the user's config.json, so each is checked before use. */
+interface PatioHeaterConfig extends PlatformConfig {
+  accessId?: string;
+  accessKey?: string;
+  endpoint?: string;
+  heaters?: unknown;
+}
 
-class PatioHeaterPlatform {
-  constructor(log, config, api) {
+export class PatioHeaterPlatform implements DynamicPlatformPlugin {
+  readonly log: Logging;
+  readonly config: PatioHeaterConfig;
+  readonly api: API;
+  readonly cached = new Map<string, PlatformAccessory>();
+  readonly heaters: PatioHeater[] = [];
+  cloud: TuyaCloud | null = null;
+  keep = new Set<string>();
+  toRegister: PlatformAccessory[] = [];
+
+  constructor(log: Logging, config: PlatformConfig | undefined, api: API) {
     this.log = log;
-    this.config = config || {};
+    this.config = config || ({} as PatioHeaterConfig);
     this.api = api;
-    this.cached = new Map();
-    this.heaters = [];
 
     api.on('didFinishLaunching', () => this.setup());
     api.on('shutdown', () => this.heaters.forEach((h) => h.stop()));
   }
 
-  configureAccessory(accessory) {
+  configureAccessory(accessory: PlatformAccessory) {
     this.cached.set(accessory.UUID, accessory);
   }
 
   /** Returns the cached accessory for this id, or creates and registers a new one. */
-  accessoryFor(id, name, category) {
+  accessoryFor(id: string, name: string, category: Categories) {
     // Ids are prefixed with "patio-heater:", so they can't collide with UUIDs another
     // plugin generates from the same Tuya device id.
     const uuid = this.api.hap.uuid.generate(id);
@@ -39,24 +52,26 @@ class PatioHeaterPlatform {
 
   setup() {
     const { accessId, accessKey, endpoint } = this.config;
-    const list = Array.isArray(this.config.heaters) ? this.config.heaters : [];
+    const list = (Array.isArray(this.config.heaters) ? this.config.heaters : []) as Partial<HeaterConfig>[];
     if (!accessId || !accessKey) {
       this.log.error('accessId and accessKey are required (the Access ID / Access Secret of your Tuya cloud project).');
       return;
     }
 
-    this.cloud = new TuyaCloud({ endpoint, accessId, accessKey, log: this.log });
+    const cloud = new TuyaCloud({ endpoint, accessId, accessKey, log: this.log });
+    this.cloud = cloud;
     this.keep = new Set();
     this.toRegister = [];
     const { Categories } = this.api.hap;
 
-    for (const cfg of list) {
-      if (!cfg.name || !cfg.blasterId || !cfg.remoteId) {
-        this.log.error('Each heater needs name, blasterId and remoteId. Skipping: %j', cfg);
+    for (const entry of list) {
+      if (!entry.name || !entry.blasterId || !entry.remoteId) {
+        this.log.error('Each heater needs name, blasterId and remoteId. Skipping: %j', entry);
         continue;
       }
+      const cfg = entry as HeaterConfig;
       const main = this.accessoryFor(`patio-heater:${cfg.remoteId}`, cfg.name, Categories.SWITCH);
-      const extra = {
+      const extra: { level: PlatformAccessory; sync?: PlatformAccessory } = {
         level: this.accessoryFor(`patio-heater:${cfg.remoteId}:level`,
           cfg.levelName || `${cfg.name} Level`, Categories.FAN),
       };
@@ -65,7 +80,8 @@ class PatioHeaterPlatform {
           cfg.syncName || `${cfg.name} Out of Sync`, Categories.SWITCH);
       }
 
-      const heater = new PatioHeater(this, main, cfg, extra);
+      const heater = new PatioHeater({ api: this.api, cloud, log: this.log },
+        main as PlatformAccessory<HeaterContext>, cfg, extra);
       this.heaters.push(heater);
     }
 
@@ -79,11 +95,7 @@ class PatioHeaterPlatform {
     }
 
     for (const heater of this.heaters) {
-      heater.start().catch((err) => this.log.error('[%s] Start failed: %s', heater.name, err.message));
+      heater.start().catch((err: Error) => this.log.error('[%s] Start failed: %s', heater.name, err.message));
     }
   }
 }
-
-module.exports = (api) => {
-  api.registerPlatform(PLATFORM_NAME, PatioHeaterPlatform);
-};

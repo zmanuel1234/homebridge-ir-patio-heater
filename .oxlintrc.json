@@ -10,7 +10,7 @@
 // ESLint's no-dupe-args and no-octal, which oxlint lacks, come from .github/oxlint/sloppy-mode-rules.mjs.
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "ignorePatterns": ["node_modules/**"], // this repository: node_modules/** and its own build output
+  "ignorePatterns": ["node_modules/**", "dist/**"], // this repository: node_modules/** and its own build output
   "jsPlugins": ["./.github/oxlint/sloppy-mode-rules.mjs"],
   "env": { "builtin": true, "node": true },
   "options": { "typeAware": true, "reportUnusedDisableDirectives": "error", "maxWarnings": 0 },
@@ -86,7 +86,7 @@
   "overrides": [
     // typescript-eslint's recommended rules and the shared checks, on this repository's TypeScript files.
     {
-      "files": ["index.js", "lib/**/*.js"], // this repository
+      "files": ["**/*.ts"], // this repository
       "rules": {
         "eslint/constructor-super": "off",
         "eslint/getter-return": "off",
@@ -172,8 +172,9 @@
       }
     },
     // ---- This repository ----
-    // CommonJS, with require().
-    {"files": ["**/*.js"], "rules": {"typescript/no-require-imports": "off"}}
+    // No `any`: values from devices, HAP and the config get a type (or `unknown`, checked);
+    // and none logged or shown as "[object Object]".
+    {"files": ["**/*.ts"], "rules": {"typescript/no-explicit-any": "error", "typescript/no-unsafe-argument": "error", "typescript/no-unsafe-assignment": "error", "typescript/no-unsafe-call": "error", "typescript/no-unsafe-member-access": "error", "typescript/no-unsafe-return": "error", "typescript/no-base-to-string": "error"}}
     // -------------------------
   ]
 }

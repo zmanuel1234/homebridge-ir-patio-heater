@@ -1,23 +1,29 @@
-'use strict';
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
 
-const { test } = require('node:test');
-const assert = require('node:assert/strict');
+import { PatioHeater, type HeaterConfig, type HeaterState } from '../src/heater.js';
+import type { StatusItem } from '../src/tuya.js';
+import { Service, Characteristic, asAccessory, fakeAccessory, fakeCloud, fakePlatform, FAST, settle, type FakeAccessory, type FakeCloud } from './helpers.js';
 
-const { PatioHeater } = require('../lib/heater');
-const { Service, Characteristic, fakeAccessory, fakeCloud, fakePlatform, FAST, settle } = require('./helpers');
+/** A service the heater must have added. */
+function service(accessory: FakeAccessory, type: { UUID: string }) {
+  const svc = accessory.getService(type);
+  assert.ok(svc, `${accessory.displayName} has no ${type.UUID} service`);
+  return svc;
+}
 
-async function makeHeater({ cfg = {}, cloud = fakeCloud(), state } = {}) {
+async function makeHeater({ cfg = {}, cloud = fakeCloud(), state }: { cfg?: Partial<HeaterConfig>; cloud?: FakeCloud; state?: HeaterState } = {}) {
   const platform = fakePlatform(cloud);
   const main = fakeAccessory('Left Heater', state ? { state } : {});
   const level = fakeAccessory('Left Heater Level');
   const sync = fakeAccessory('Left Heater Out of Sync');
-  const heater = new PatioHeater(platform, main, {
+  const heater = new PatioHeater(platform, asAccessory(main), {
     name: 'Left Heater', blasterId: 'blaster', remoteId: 'remote', ...FAST, ...cfg,
-  }, { level, sync });
+  }, { level: asAccessory(level), sync: asAccessory(sync) });
   await heater.start();
-  const on = main.getService(Service.Switch).getCharacteristic(Characteristic.On);
-  const fan = level.getService(Service.Fanv2);
-  const syncOn = sync.getService(Service.Switch).getCharacteristic(Characteristic.On);
+  const on = service(main, Service.Switch).getCharacteristic(Characteristic.On);
+  const fan = service(level, Service.Fanv2);
+  const syncOn = service(sync, Service.Switch).getCharacteristic(Characteristic.On);
   return {
     heater, cloud, platform, on, syncOn,
     active: fan.getCharacteristic(Characteristic.Active),
@@ -138,7 +144,7 @@ test('autoOffMinutes without a plug is ignored with a warning', async () => {
 
 // ─── The plug, auto-off and the remote's keys ─────────────────────────────
 
-const plugCloud = (status) => Object.assign(fakeCloud(), { getStatus: async () => status() });
+const plugCloud = (status: () => StatusItem[]) => Object.assign(fakeCloud(), { getStatus: async () => status() });
 
 test('the plug reported off while the heater is on: HomeKit shows it off', async (t) => {
   let plugOn = true;
@@ -194,7 +200,7 @@ test('a remote without the configured keys: an error naming them, and presses ar
   t.after(() => heater.stop());
   const missing = platform.logs.find((l) => l.level === 'error' && /Remote has no key named/.test(l.msg));
   assert.ok(missing);
-  assert.match(missing.args[0], /500W, 1000W, 1500W/);
+  assert.match(String(missing.args[0]), /500W, 1000W, 1500W/);
   on.setHandler(true);
   await settle(heater);
   assert.deepEqual(cloud.sent, [], 'nothing pressed');
@@ -205,7 +211,7 @@ test('a remote without the configured keys: an error naming them, and presses ar
 test('keys that fail to load are retried later', async (t) => {
   let fail = true;
   const real = fakeCloud();
-  const cloud = Object.assign(real, { getRemoteKeys: async () => { if (fail) throw new Error('Tuya down'); return fakeCloud().getRemoteKeys(); } });
+  const cloud = Object.assign(real, { getRemoteKeys: async () => { if (fail) throw new Error('Tuya down'); return fakeCloud().getRemoteKeys('blaster', 'remote'); } });
   const { heater, platform } = await makeHeater({ cloud });
   t.after(() => heater.stop());
   assert.ok(platform.logs.some((l) => l.level === 'error' && /retrying in 60s/.test(l.msg)));
@@ -219,7 +225,7 @@ test('a failed repeat of the level press is only a warning: the first press went
   const cloud = fakeCloud();
   const realPress = cloud.pressKey;
   let presses = 0;
-  cloud.pressKey = async (...args) => {
+  cloud.pressKey = async (...args: Parameters<FakeCloud['pressKey']>) => {
     if (args[3].key_name === '1500W' && ++presses === 2) throw new Error('timeout');
     return realPress(...args);
   };

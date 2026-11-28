@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.0 - 2026-11-28
+
+No change to how the plugin works: the same accessories, Tuya requests and log messages as 1.3.0.
+
+- Rewritten in TypeScript and published as an ES module built to `dist/`, on the author's Homebridge plugin template (which is built on Homebridge's own), like the author's other plugins.
+- Development only: tests for the platform on Homebridge's own HAP library (which tiles each heater gets, kept across restarts, removed when no longer in the settings); `npm run watch` runs a local Homebridge that restarts on every change.
+
 ## 1.3.0 - 2026-11-27
 
 Requires Homebridge 2; nothing else changes in how the plugin works.

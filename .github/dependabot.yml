@@ -3,7 +3,7 @@
 # copies the same apart from the "This repository" notes.
 # Weekly update pull requests; CI runs on each one, and each still needs a review before merging.
 #
-# This repository: plain JavaScript; TypeScript is only used by oxlint and the type check.
+# This repository: nothing special.
 version: 2
 
 updates:
