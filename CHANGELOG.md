@@ -4,9 +4,9 @@
 
 Requires Homebridge 2; nothing else changes in how the plugin works.
 
-- **Requires Homebridge 2** (2.0.0 or later). Homebridge 1.6 to 1.11 are no longer supported; on Homebridge 1, the Homebridge UI keeps offering 1.2.4.
+- **Requires Homebridge 2** (2.0.0 or later). Homebridge 1.6 to 1.11 are no longer supported; on Homebridge 1, stay on 1.2.4: the Homebridge UI still offers this update, with a warning that it needs Homebridge 2.
 - README: Requirements, Development and License sections in the same style as the other plugins.
-- Development only: the same checks, lint setup, issue forms and package layout as the author's other plugins (`npm run verify` also checks the settings schema, the README's JSON examples and Homebridge's plugin rules; oxlint 1.95.0); after a stable release, npm's `beta` tag is removed when it points at an older version; CI no longer fails when npm's registry gives a broken answer for a development-only package.
+- Development only: the same checks, lint setup and issue forms as the author's other plugins (`npm run verify` also checks the settings schema, the README's JSON examples and Homebridge's plugin rules; oxlint 1.95.0); after a stable release, npm's `beta` tag is removed when it points at an older version; CI no longer fails when npm's registry gives a broken answer for a development-only package.
 
 ## 1.2.4 - 2026-11-27
 
