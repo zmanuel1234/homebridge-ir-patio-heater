@@ -75,7 +75,7 @@ and `npm run watch`, `test/hbConfig`, the homebridge-lib Eve types, `.vscode`, A
   only type checks here.
 - **Leftovers dropped:** no `.npmignore` (the `files` list in `package.json` decides what is
   published), no Homebridge UI in `test/hbConfig` (it isn't installed there, so Homebridge logged
-  an error on every start), and no browser (DOM) types in `tsconfig.json`: a plugin runs in Node.js.
+  an error on every start, and its login file `auth.json` went with it), and no browser (DOM) types in `tsconfig.json`: a plugin runs in Node.js.
 
 ### Keeping up with Homebridge's template
 
