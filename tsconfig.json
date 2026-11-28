@@ -1,15 +1,25 @@
 {
-  // Not used for building: the plugin is plain JavaScript. oxlint's type-aware rules (the
-  // promise checks) read the code through this file.
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2022"],
-    "module": "commonjs",
-    "allowJs": true,
-    "checkJs": false,
-    "noEmit": true,
+    "lib": [
+      "DOM",
+      "ES2022"
+    ],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "strict": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
     "types": ["node"],
-    "skipLibCheck": true
+    "noEmit": true,
+    "newLine": "lf"
   },
-  "include": ["index.js", "lib", "test"]
+  "include": [
+    "src",
+    "test"
+  ]
 }
