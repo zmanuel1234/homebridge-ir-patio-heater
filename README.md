@@ -26,7 +26,7 @@ Rename tiles with `levelName` / `syncName`, or hide Out of Sync with `showSyncBu
 
 ## Requirements
 
-- Homebridge 1.6 or later (including 2.x), Node.js 22 (22.19 or later), 24 or 26.
+- Homebridge 2 (2.0.0 or later), Node.js 22 (22.19 or later), 24 or 26.
 - A Tuya (Smart Life) universal IR blaster with the heater's remote learned or added in the app.
 - A Tuya IoT Platform cloud project linked to your app account, with **IoT Core** and
   **IR Control Hub Open Service** authorized. If you already use a Tuya Homebridge plugin,
