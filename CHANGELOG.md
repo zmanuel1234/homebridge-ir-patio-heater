@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.3.1-beta.1 - 2026-11-28
+## 1.4.0 - 2026-11-28
 
 No change to how the plugin works: the same accessories, Tuya requests and log messages as 1.3.0.
 
