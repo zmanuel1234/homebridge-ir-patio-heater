@@ -73,6 +73,9 @@ and `npm run watch`, `test/hbConfig`, the homebridge-lib Eve types, `.vscode`, A
   (`.github/scripts/check-config-schema.mjs`).
 - `npm run watch` builds to `dist/` with `npm run build` before each restart, since `tsc` alone
   only type checks here.
+- **Leftovers dropped:** no `.npmignore` (the `files` list in `package.json` decides what is
+  published), no Homebridge UI in `test/hbConfig` (it isn't installed there, so Homebridge logged
+  an error on every start), and no browser (DOM) types in `tsconfig.json`: a plugin runs in Node.js.
 
 ### Keeping up with Homebridge's template
 
