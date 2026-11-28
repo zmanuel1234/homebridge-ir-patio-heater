@@ -165,7 +165,7 @@ export class TuyaCloud {
   async raw<T>(method: string, path: string, query?: Query, body?: unknown, isTokenRequest = false): Promise<TuyaResponse<T>> {
     const bodyStr = body === undefined ? '' : JSON.stringify(body);
     const qs = query && Object.keys(query).length
-      ? '?' + new URLSearchParams(Object.entries(query).map(([k, v]) => [k, String(v)])).toString()
+      ? '?' + new URLSearchParams(Object.entries(query).map(([k, v]): [string, string] => [k, String(v)])).toString()
       : '';
 
     // Only reads are retried. A POST that timed out may already have reached the
