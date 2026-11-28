@@ -1,12 +1,18 @@
-'use strict';
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
-const test = require('node:test');
-const assert = require('node:assert/strict');
-const schema = require('../config.schema.json');
+interface Field {
+  type?: string;
+  'x-schema-form'?: { type?: string };
+}
+const schema = JSON.parse(readFileSync(new URL('../config.schema.json', import.meta.url), 'utf8')) as {
+  schema: { properties: { heaters: { items: { properties: Record<string, Field> } } } };
+};
 
 test('settings screen: no <...> in labels, which the screen renders as markup', () => {
-  const texts = [];
-  const walk = (o) => {
+  const texts: string[] = [];
+  const walk = (o: unknown) => {
     if (!o || typeof o !== 'object') {
       return;
     }
